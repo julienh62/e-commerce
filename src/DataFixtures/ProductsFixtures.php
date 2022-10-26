@@ -21,10 +21,10 @@ class ProductsFixtures extends Fixture
 
         $faker = Faker\Factory::create('fr_FR');
 
-        for($prod = 1; $prod <= 5; $prod++){
+        for($prod = 1; $prod <= 10; $prod++){
             $product = new products();
-            $product->setName($faker->name);
-            $product->setDescription($faker->text(15));
+            $product->setName($faker->text(15));
+            $product->setDescription($faker->text());
             $product->setSlug($this->slugger->slug($product->getName())->lower());
             $product->setPrice($faker->numberBetween(900, 150000));
             $product->setStock($faker->numberBetween(0, 10));
@@ -33,11 +33,11 @@ class ProductsFixtures extends Fixture
             $category = $this->getReference('cat-'. rand(1, 8));
             $product->setCategories($category);
 
+
+            $this->setReference('prod-'.$prod, $product);
             $manager->persist($product);
 
-
         }
-
 
         $manager->flush();
     }
