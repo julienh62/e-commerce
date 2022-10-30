@@ -55,6 +55,9 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 150)]
     private ?string $phone = null;
 
+    #[ORM\Column(type: 'boolean')]
+    private $is_verified = false;
+
     //    #[ORM\Column]
 //    private ?\DateTimeImmutable $created_at = null;
 
@@ -203,6 +206,20 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
+
+    public function getIsVerified(): ?bool
+    {
+        return $this->is_verified;
+    }
+
+    public function setIsVerified(bool $is_verified): self
+    {
+        $this->is_verified = $is_verified;
+
+        return $this;
+    }
+
+
 
     public function getCountry(): ?string
     {
