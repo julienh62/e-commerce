@@ -15,8 +15,8 @@ class MainController extends AbstractController
         return $this->render('main/index.html.twig', [
             'categories' => $categoriesRepository->findBy([],
             ['categoryOrder' => 'asc'])
-            ]
+            ]);
             //tablaeu vide car je veux tout
-             );
+
     }
 }
