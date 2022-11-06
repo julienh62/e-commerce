@@ -58,6 +58,7 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'boolean')]
     private $is_verified = false;
 
+
     //    #[ORM\Column]
 //    private ?\DateTimeImmutable $created_at = null;
 
@@ -69,6 +70,9 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\OneToMany(mappedBy: 'users', targetEntity: Orders::class)]
     private Collection $orders;
+
+    #[ORM\Column(length: 100)]
+    private ?string $resetToken = null;
 
     public function __construct()
     {
@@ -220,7 +224,6 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
 
-
     public function getCountry(): ?string
     {
         return $this->country;
@@ -245,17 +248,7 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-//    public function getCreatedAt(): ?\DateTimeImmutable
-//    {
-//        return $this->created_at;
-//    }
-//
-//    public function setCreatedAt(\DateTimeImmutable $created_at): self
-//    {
-//        $this->created_at = $created_at;
-//
-//        return $this;
-//    }
+
 // placé dans Trait /CreatedATtrait et importé avec use ligne 14 et 5
 // dans la class
 
@@ -285,6 +278,18 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
                 $order->setUsers(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getResetToken(): ?string
+    {
+        return $this->resetToken;
+    }
+
+    public function setResetToken(string $resetToken): self
+    {
+        $this->resetToken = $resetToken;
 
         return $this;
     }
