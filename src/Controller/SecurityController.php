@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Form\ResetPasswordFormType;
 use App\Form\ResetPasswordRequestFormType;
 use App\Repository\UsersRepository;
 use App\Service\SendMailService;
@@ -96,7 +97,6 @@ class SecurityController extends AbstractController
             }
                 // si $user n'existe pas
                 $this->addFlash('danger', 'Un problème est survenu');
-
                 return $this->redirectToRoute('app_login');
 
 
@@ -118,6 +118,34 @@ class SecurityController extends AbstractController
         {
          // on verifie que l'on a ce token dans la bdd
          $user = $usersRepository->findOneByResetToken($token);
-         dd($user);
+         
+         if($user){
+            $form = $this->createForm(ResetPasswordFormType::class);
+
+            $form->handleRequest($request);
+
+            if($form->isSubmitted() && $form->isValid()) {
+                //on efface le token
+                $user->setResetToken('');
+                $user->setPassword(
+                    $passwordHasher->hashPassword(
+                        $user,
+                        $form->get('password')->getData()
+                    )
+                    );
+                    $entitymanager->persist($user);
+                    $entitymanager->flush();
+
+                    $this->addFlash('success', 'Mot de passe changé avec succès');
+                    return $this->redirectToRoute('app_login');
+            }
+
+            return $this->render('security/reset_password.html.twig', [
+                'passForm' => $form->createView()
+            ]);
+         }
+          // si jeton n'est pas valide
+          $this->addFlash('danger', 'Jeton invalide');
+          return $this->redirectToRoute('app_login');
         }
 }
