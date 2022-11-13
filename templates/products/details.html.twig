@@ -15,28 +15,27 @@
                 <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="true">
 
                    <div class="carousel-indicators">
-                     <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-                     <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
-                     <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
-                    </div>
+
+                       {% for iteration in 1..product.images|length %}
+                          <button type="button"  data-bs-target="#carouselExampleIndicators"
+                           data-bs-slide-to="{{ iteration - 1 }}" {{ (loop.first) ?
+                           'class="active" aria-current="true"' : ''  }}  aria-label="Slide {{ 
+                           iteration }}"></button>
+                       {% endfor %}
+                    
+                   </div>
 
                     <div class="carousel-inner">
                        {% for image in product.images %}
-
-                          <pre>
-                          {{ dump(image) }}
-                          </pre>
+                           <div class="carousel-item {{ (loop.first ) ? 'active' : ''}} ">
+                           {#si je suis sur la 1ere image , je mets avtive sinon je ne mets rien
+                           loo.first cf doc twig symfony boucle for loop    ~ pour concatener  #}
+                                 <img src="{{ asset('assets/uploads/') ~ image.name }}" class="d-block w-100" alt="{{ product.name }}">
+                           </div>
+                       
 
                        {% endfor %}
-                         <div class="carousel-item active">
-                            <img src="..." class="d-block w-100" alt="...">
-                         </div>
-                         <div class="carousel-item">
-                            <img src="..." class="d-block w-100" alt="...">
-                         </div>
-                         <div class="carousel-item">
-                              <img src="..." class="d-block w-100" alt="...">
-                         </div>
+                       
                     </div>
 
                     <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
@@ -55,6 +54,11 @@
               <p>{{ product.description }}</p>
               <p>Categorie: {{ product.categories.name }}</p>
               <p>Prix: {{ product.price /100 }} €</p>
+              {% if product.stock > 0 %}
+                 <a href="#" class="btn btn-success"> Ajouter au panier</a>
+              {% else %}  
+                 <p class="text-danger"> Temporairement en rupture de stock</p>
+              {% endif %}  
             </div>
 
             
