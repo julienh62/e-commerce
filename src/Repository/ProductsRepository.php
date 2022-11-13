@@ -39,6 +39,29 @@ class ProductsRepository extends ServiceEntityRepository
         }
     }
 
+    public function findProductsPaginated(int $page, string $slug, int $limit = 6): array
+    // si pas de limit ce sera 6 résultzts qui sont envoyés
+    {
+       $limit = abs($limit);
+       //abs valeur absolu pour limit tjrs>0
+
+       $result = [];
+
+       $query = $this->getEntityManager()->createQueryBuilder()
+       // c t p category et produit
+       //on selectionne ce qu il ya dans category et product
+       //de la table product jointe à categories par l'intermédiaire du champ categories
+       //qui ont comme categori le slug qu'on lui passera
+         ->select('c', 'p')
+         ->from('App\Entity\Products', 'p')
+         ->join('p.categories', 'c')
+         ->where("c.slug = '$slug'");
+
+         dd($query->getQuery()->getResult());
+       return $result;
+    }
+
+
 //    /**
 //     * @return Products[] Returns an array of Products objects
 //     */
