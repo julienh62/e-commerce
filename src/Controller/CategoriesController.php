@@ -18,10 +18,11 @@ class CategoriesController extends AbstractController
         //on va chercher le numéro de page dans l'url
         //getInt chercher un entier
         //par défaut page 1 si page pas trouvée
-        $page = $request->query->getInt('page', 1);
+        $page = $request->query->getInt('page', 1);git add .
         //on va chercher la liste des produit de la categorie
         $products = $productsRepository->findProductsPaginated($page, $category->getSlug(), 2);
-
+          // findProductsPaginated 3eme argument 2 est ici le nombre d'article que l'on souhite afficher par page
+          //on peut le modifier pour choisir le nbre d'articles par page
          // dd($products);
 
         return $this->render('categories/list.html.twig', compact('category', 'products'));
