@@ -1,0 +1,22 @@
+{% if pages > 1 %}
+  <nav>
+    <ul class ="pagination">
+      <li class="page-item">
+        {% if pages > 1 %}
+           <a href="{{ path(path, {slug: slug, page: currentPage - 1}) }}"
+            class="page-link"> &lt;> </a>
+        {% else %}
+              <a href="{{ path(path, {slug: slug, page: currentPage - 1}) }}"
+            class="page-link"> &lt; </a>
+        {% endif %}
+      </li>
+    {% for page in 1..pages %}
+    {#on commence à 1 et on finit à pages #}
+        <li class="page-item">
+            <a href="{{ path(path, {slug: slug, page: page}) }}"
+            class="page-link"> {{ page }} </a>
+        </li>
+    {% endfor %}
+    </ul>
+  </nav>
+  {% endif %}

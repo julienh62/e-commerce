@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Products;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -41,6 +42,7 @@ class ProductsRepository extends ServiceEntityRepository
 
     public function findProductsPaginated(int $page, string $slug, int $limit = 6): array
     // si pas de limit ce sera 6 résultzts qui sont envoyés
+    // limit est le nbre d'article maxi par page
     {
        $limit = abs($limit);
        //abs valeur absolu pour limit tjrs>0
@@ -55,9 +57,32 @@ class ProductsRepository extends ServiceEntityRepository
          ->select('c', 'p')
          ->from('App\Entity\Products', 'p')
          ->join('p.categories', 'c')
-         ->where("c.slug = '$slug'");
+         ->where("c.slug = '$slug'")
+         ->setMaxResults($limit)
+         ->setFirstResult(($page * $limit) - $limit);
+        // si 2 articles par page, le 5eme article est sur la page 3
 
-         dd($query->getQuery()->getResult());
+        $paginator = new Paginator($query);
+        $data = $paginator->getQuery()->getResult();
+        //dd($data);
+
+           // dd($query->getQuery()->getResult());
+
+
+        // on verifie qu'on a bien des données
+        if(empty($data)){
+           return $result;
+       }
+           //on calcule le nombre de pages
+           //ceil fait l'arrondi au supérieur
+           //paginator cont me donne le nombre de page
+          $pages = ceil($paginator->count() / $limit);
+
+    // On remplit le tableau
+        $result['data'] = $data;
+        $result['pages'] = $pages;
+        $result['page'] = $page;
+        $result['limit'] = $limit;
        return $result;
     }
 
